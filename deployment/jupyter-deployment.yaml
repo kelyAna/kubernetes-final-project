@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyter-dp
+  namespace: jupyter
+  labels:
+    app: jupyter-app
+spec:
+  selector:
+    matchLabels:
+      app: jupyter-pods
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: jupyter-pods
+    spec:
+      containers:
+      - name: jupyter-container
+        image: jupyter/minimal-notebook:2022-12-05
+        ports:
+        - containerPort: 8088
+        command: ["start-notebool.sh"]
+        args: ["--NotebookApp.tokens=''"]
